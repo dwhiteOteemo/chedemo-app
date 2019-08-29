@@ -1,0 +1,13 @@
+apiVersion: v1
+entries:
+  chedemo:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2019-08-28T20:19:05.049866-04:00
+    description: A Helm chart for Kubernetes
+    digest: 147f7c8a2d820d5874e5407253b73714791601b58b0f0db03380b4e8f2f71ef4
+    name: chedemo
+    urls:
+    - https://github.com/dwhiteOteemo/chedemo-app/blob/master/index.html/chedemo-0.1.0.tgz
+    version: 0.1.0
+generated: 2019-08-28T20:19:05.04737-04:00
