@@ -1,16 +1,16 @@
-# Default values for xdemo.
+# Default values for chedemo.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 
 frontEnd:
   replicaCount: 1
-  name: xdemo-frontend
+  name: chedemo-frontend
   image:
-    repository: davwhiteoteemo/xdemo-frontend
+    repository: davwhiteoteemo/chedemo-frontend
     tag: latest
     pullPolicy: Always
-    serverName: xdemo-backend
+    serverName: chedemo-backend
     servicePort: 9090
 
   nameOverride: ""
@@ -54,19 +54,19 @@ frontEnd:
 
 backEnd:
   replicaCount: 1
-  name: xdemo-backend
+  name: chedemo-backend
   image:
-    repository: davwhiteoteemo/xdemo-backend
+    repository: davwhiteoteemo/chedemo-backend
     tag: latest
     pullPolicy: Always
 
-    url: "jdbc:mysql://xdemo-database/"
+    url: "jdbc:mysql://chedemo-database/"
     service_port: "9090"
-    dbName: xdemo
+    dbName: chedemo
     driver: "org.gjt.mm.mysql.Driver"
-    userName: xdemo
-    password: xdemo
-    db_descriptor: "jdbc/xdemo"
+    userName: chedemo
+    password: chedemo
+    db_descriptor: "jdbc/chedemo"
     report_cache: "false"
     charts_cache: "false"
     redis_server: localhost
@@ -112,14 +112,14 @@ backEnd:
 
 database:
   replicaCount: 1
-  name: xdemo-database
+  name: chedemo-database
   image:
-    repository: davwhiteoteemo/xdemo-database
+    repository: davwhiteoteemo/chedemo-database
     tag: latest
     pullPolicy: Always
-    dbPassword: "xdemo"
-    dbUser: "xdemo"
-    dbName: "xdemo"
+    dbPassword: "chedemo"
+    dbUser: "chedemo"
+    dbName: "chedemo"
   nameOverride: ""
   fullnameOverride: ""
 
