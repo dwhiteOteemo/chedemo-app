@@ -105,7 +105,7 @@ service.yaml
 10. CD back to the ```chedemo-app``` directory.
 11. Deploy the application to your namespace:
 ```
-apply -f manifests/chedemo/templates --recursive -n <YOUR-NAMESPACE>
+kubectl apply -f manifests/chedemo/templates --recursive -n <YOUR-NAMESPACE>
 ```
 12. Use ```kubectl get pods -n <YOUR-NAMESPACE> -w``` to confirm pods were created successfully.
 13. When all the pods are up connect to the frontend pod to test the deployment:
