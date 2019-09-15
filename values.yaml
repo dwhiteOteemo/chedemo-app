@@ -21,13 +21,13 @@ frontEnd:
     port: 80
 
   ingress:
-    enabled: false
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
-    paths: []
+    enabled: true
+    annotations: 
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+    paths: [/]
     hosts:
-      - chart-example.local
+      - chedemo.192.168.99.100.nip.io
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
