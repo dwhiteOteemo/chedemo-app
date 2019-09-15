@@ -1,7 +1,7 @@
 # CheDemoApp
 
 # Release Notes
-**v0.0 Initial release**
+**v0.1 Initial release**
 - values.yaml defines resources for pods
 - Added project information to README file
 
