@@ -65,7 +65,7 @@ php7-apache2
 php7-curl 
 php7-json
 ```
-The main pages are simple php pages with bootstrap components to hadle UI and formatting. The php resta calls are handle with curl and the php json library. When launching the container the following environment variables are set to identify the backend service name and port.
+The main pages are simple php pages with bootstrap components to hadle UI and formatting. The php rest calls are handle with curl and the php json library. When launching the container the following environment variables are set to identify the backend service name and port.
 ```
 SERVICE_NAME=<NAME-OF-BACKEND-SERVICE>
 SERVICE_PORT=<BACKEND-SERVICE-PORT>
