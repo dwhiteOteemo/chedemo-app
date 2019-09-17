@@ -1,0 +1,15 @@
+apiVersion: 1.0.0
+metadata:
+  name: chedemo
+components:
+  - alias: davwhiteoteemo-chede
+    type: dockerimage
+    image: davwhiteoteemo/chedemo-frontend
+    memoryLimit: 512M
+    mountSources: true
+    command:
+      - tail
+    args:
+      - '-f'
+      - /dev/null
+
