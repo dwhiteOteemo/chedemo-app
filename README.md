@@ -122,3 +122,14 @@ The deployment consists of ```3 services, 1 ingress resource, and 3 deployments`
 
 # The Demo App
 This application is intended as a starting point for development teams wishing to use the DevOps Application Deployment pipeline and provides simple examples from which to base your initial efforts. The walkthrough above is a standalone workflow which we encourage interested teams to experiment with and integrate into their projects. 
+
+# Deployment on Che
+The included ``chedemo.yaml`` will create a workspace in Che. Deploy it with the following:
+
+```
+CHESERVER=<yourcheserverurl>;
+MYUSER=<yourusername>;
+MYPASS=<yourpassword>;
+A_TOKEN=$(curl --data "grant_type=password&client_id=admin-cli&username=$MYUSER&password=$MYPASS" https://$CHESERVER/auth/realms/che/protocol/openid-connect/token | jq '. | .access_token' | tr -d '"');
+chectl workspace:start --devfile=chedemo.yaml --access-token=$A_TOKEN
+```
