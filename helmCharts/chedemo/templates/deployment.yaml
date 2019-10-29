@@ -1,0 +1,187 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.frontEnd.name }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.frontEnd.name }}
+    helm.sh/chart: {{ include "chedemo.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.frontEnd.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.frontEnd.name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.frontEnd.name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Values.frontEnd.name }}
+          image: "{{ .Values.frontEnd.image.repository }}:{{ .Values.frontEnd.image.tag }}"
+          imagePullPolicy: {{ .Values.frontEnd.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.frontEnd.resources | nindent 12 }}
+          env:
+            - name: server_name
+              value: {{ .Values.frontEnd.image.serverName }}
+            - name: servive_port
+              value: {{ .Values.frontEnd.image.servicePort | quote }}
+      {{- with .Values.frontEnd.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.frontEnd.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.backEnd.name }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.backEnd.name }}
+    helm.sh/chart: {{ include "chedemo.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.backEnd.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.backEnd.name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.backEnd.name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Values.backEnd.name }}
+          image: "{{ .Values.backEnd.image.repository }}:{{ .Values.backEnd.image.tag }}"
+          imagePullPolicy: {{ .Values.backEnd.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.backEnd.image.service_port }}
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.backEnd.image.service_port }}
+            initialDelaySeconds: 15
+            periodSeconds: 20
+
+          resources:
+            {{- toYaml .Values.backEnd.resources | nindent 12 }}
+          env:
+            - name: url
+              value: {{ .Values.backEnd.image.url }}
+            - name: dbName
+              value: {{ .Values.backEnd.image.dbName }}
+            - name: driver
+              value: {{ .Values.backEnd.image.driver }}
+            - name: userName
+              value: {{ .Values.backEnd.image.userName }}
+            - name: password
+              value: {{ .Values.backEnd.image.password }}
+            - name: db_descriptor
+              value: {{ .Values.backEnd.image.db_descriptor }}
+            - name: report_cache
+              value: {{ .Values.backEnd.image.report_cache | quote }}
+            - name: charts_cache
+              value: {{ .Values.backEnd.image.charts_cache | quote }}
+            - name: redis_server
+              value: {{ .Values.backEnd.image.redis_server }}
+            - name: service_port
+              value: {{ .Values.backEnd.image.service_port | quote }}
+            - name: server_name
+              value: {{ .Values.backEnd.image.server_name }}
+      {{- with .Values.backEnd.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.backEnd.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.database.name }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.database.name }}
+    helm.sh/chart: {{ include "chedemo.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.database.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Values.database.name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.database.name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
+          imagePullPolicy: {{ .Values.database.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 3306
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: {{ .Values.database.image.dbPassword }}
+            - name: MYSQL_USER
+              value: {{ .Values.database.image.dbUser }}
+            - name: MYSQL_PASSWORD
+              value: {{ .Values.database.image.dbPassword }}
+            - name: MYSQL_DATABASE
+              value: {{ .Values.database.image.dbName }}
+      {{- with .Values.database.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.database.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.database.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

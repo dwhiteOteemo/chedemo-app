@@ -1,0 +1,40 @@
+{{- if .Values.frontEnd.ingress.enabled -}}
+{{- $fullName := .Values.frontEnd.name -}}
+{{- $ingressPaths := .Values.frontEnd.ingress.paths -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app.kubernetes.io/name: {{ include "chedemo.name" . }}
+    helm.sh/chart: {{ include "chedemo.chart" . }}
+    # app.kubernetes.io/instance: {{ .Release.Name }}
+    # app.kubernetes.io/managed-by: {{ .Release.Service }}
+  {{- with .Values.frontEnd.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if .Values.frontEnd.ingress.tls }}
+  tls:
+  {{- range .Values.frontEnd.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . | quote }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- range .Values.frontEnd.ingress.hosts }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+	{{- range $ingressPaths }}
+          - path: {{ . }}
+            backend:
+              serviceName: {{ $fullName }}
+              servicePort: http
+	{{- end }}
+  {{- end }}
+{{- end }}
